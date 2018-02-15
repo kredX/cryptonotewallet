@@ -234,7 +234,8 @@ void WalletAdapter::sendTransaction(const QVector<CryptoNote::WalletLegacyTransf
     lock();
     m_wallet->sendTransaction(_transfers.toStdVector(), _fee, NodeAdapter::instance().convertPaymentId(_paymentId), _mixin, 0);
     Q_EMIT walletStateChangedSignal(tr("Sending transaction"));
-  } catch (std::system_error&) {
+  } catch (std::system_error& _err) {
+    Q_EMIT walletStateChangedSignal( QString::fromStdString(_err.code().message()));
     unlock();
   }
 }
